@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Extreme Crypto Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <style>
+        body {
+            background: radial-gradient(circle, #2c3e50, #34495e);
+            font-family: 'Roboto', sans-serif;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 650px;
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.7), 0 0 50px rgba(255, 0, 255, 0.7);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+            animation: glow 5s infinite alternate;
+        }
+
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 40px rgba(0, 255, 255, 0.5), 0 0 60px rgba(255, 0, 255, 0.5);
+            }
+
+            100% {
+                box-shadow: 0 0 40px rgba(255, 0, 255, 0.5), 0 0 60px rgba(0, 255, 255, 0.5);
+            }
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #00d2b2;
+            text-shadow: 0 0 20px #00d2b2, 0 0 40px #00d2b2, 0 0 60px #00d2b2;
+            margin-bottom: 20px;
+            animation: glitch 2s infinite;
+        }
+
+        @keyframes glitch {
+            0% {
+                transform: translate(2px, 2px);
+                text-shadow: 1px 0 red, 0 1px green, -1px 0 blue, 0 -1px yellow;
+            }
+
+            50% {
+                transform: translate(-2px, -2px);
+                text-shadow: -1px 0 red, 0 1px green, 1px 0 blue, 0 -1px yellow;
+            }
+
+            100% {
+                transform: translate(2px, 2px);
+                text-shadow: 1px 0 red, 0 1px green, -1px 0 blue, 0 -1px yellow;
+            }
+        }
+
+        .price {
+            font-size: 4rem;
+            font-weight: 700;
+            color: #ff00ff;
+            text-shadow: 0 0 20px #ff00ff, 0 0 40px #ff00ff;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            100% {
+                transform: scale(1.1);
+            }
+        }
+
+        .balance {
+            font-size: 1.8rem;
+            color: #00ffff;
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff;
+        }
+
+        .crypto-btn {
+            font-size: 1.5rem;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            margin: 10px;
+            transition: 0.3s;
+            cursor: pointer;
+            font-weight: 700;
+            width: 48%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+        }
+
+        .crypto-btn:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #ff00ff, #00d2b2, #ff00ff);
+            background-size: 400% 400%;
+            animation: gradient 2s ease infinite;
+            z-index: -1;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 400% 0;
+            }
+
+            50% {
+                background-position: 100% 400%;
+            }
+
+            100% {
+                background-position: 0 0;
+            }
+        }
+
+        .buy-btn {
+            background: transparent;
+            color: white;
+        }
+
+        .sell-btn {
+            background: transparent;
+            color: white;
+        }
+
+        .crypto-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-box {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            width: 270px;
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.7);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-box h5 {
+            font-size: 1.5rem;
+            color: #00d2b2;
+            margin-bottom: 15px;
+        }
+
+        .chat-box input {
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            color: #00d2b2;
+            background-color: #222;
+        }
+
+        .chat-box button {
+            background-color: #00b5e2;
+            border: none;
+            border-radius: 15px;
+            padding: 12px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: white;
+            box-shadow: 0 0 15px rgba(0, 181, 226, 0.8);
+        }
+
+        .chat-box button:hover {
+            background-color: #00d2b2;
+        }
+
+        .news-section {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+
+        .news-title {
+            font-size: 1.6rem;
+            color: #ff00ff;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px #ff00ff;
+        }
+
+        .news-item {
+            color: #fff;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        .chart-container {
+            height: 350px;
+            margin-top: 20px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>🚀 Extreme Crypto Tracker</h1>
+        <div class="price" id="price">Loading...</div>
+        <div class="balance">Balance: 💳 $<span id="balance">999999999</span></div>
+
+        <button class="crypto-btn buy-btn" onclick="buyCrypto()">💰 Buy Crypto</button>
+        <button class="crypto-btn sell-btn" onclick="sellCrypto()">💸 Sell Crypto</button>
+
+        <div class="chart-container">
+            <canvas id="priceChart"></canvas>
+        </div>
+
+        <div class="news-section">
+            <div class="news-title">Latest Bitcoin News</div>
+            <div id="latestNews" class="news-item">Loading...</div>
+        </div>
+    </div>
+
+    <!-- Chatbox -->
+    <div class="chat-box">
+        <h5>May I Assist You?</h5>
+        <input type="text" id="chatInput" placeholder="Ask anything..." />
+        <button onclick="sendChat()">Send</button>
+    </div>
+
+    <script>
+        let lastPrice = 0;
+        let balance = 999999999;
+        let investment = 0;
+        let prices = [];
+        let timestamps = [];
+        let ctx = document.getElementById('priceChart').getContext('2d');
+        let priceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: timestamps,
+                datasets: [{
+                    label: 'Bitcoin Price (USD)',
+                    data: prices,
+                    borderColor: '#ff00ff',
+                    backgroundColor: 'rgba(255, 0, 255, 0.2)',
+                    borderWidth: 3,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#00d2b2',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { display: false },
+                    y: { beginAtZero: false }
+                }
+            }
+        });
+
+        async function fetchPrice() {
+            try {
+                let response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+                let data = await response.json();
+                let newPrice = data.bitcoin.usd;
+                document.getElementById('price').innerText = `$${newPrice}`;
+                lastPrice = newPrice;
+                timestamps.push(new Date().toLocaleTimeString());
+                prices.push(newPrice);
+
+                if (timestamps.length > 10) {
+                    timestamps.shift();
+                    prices.shift();
+                }
+
+                priceChart.update();
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function fetchNews() {
+            try {
+                let response = await fetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=1');
+                let data = await response.json();
+                let news = data.market_caps;
+                document.getElementById('latestNews').innerHTML = news[0][0] ? news[0][0] : "Latest news coming soon!";
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        function buyCrypto() {
+            balance -= 5000;
+            document.getElementById('balance').innerText = balance;
+        }
+
+        function sellCrypto() {
+            balance += 5000;
+            document.getElementById('balance').innerText = balance;
+        }
+
+        function sendChat() {
+            const message = document.getElementById('chatInput').value;
+            if (message) {
+                alert('You said: ' + message);
+            }
+        }
+
+        setInterval(fetchPrice, 10000);
+        setInterval(fetchNews, 30000);
+    </script>
+</body>
+
+</html>
