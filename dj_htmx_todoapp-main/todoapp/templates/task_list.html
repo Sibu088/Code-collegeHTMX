@@ -1,0 +1,187 @@
+{% extends "base.html" %} 
+{% block content %}
+
+<style>
+  body {
+    background-color: #0d0d0d;
+    color: #00ffff;
+    font-family: 'Orbitron', sans-serif;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .todo-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    background: rgba(17, 17, 17, 0.95);
+    border-radius: 10px;
+    box-shadow: 0 0 20px #00ffff, 0 0 40px #ff00ff;
+    border: 2px solid #00ffff;
+    animation: glow 1.5s infinite alternate;
+  }
+
+  @keyframes glow {
+    0% {
+      box-shadow: 0 0 20px #00ffff, 0 0 40px #ff00ff;
+    }
+    100% {
+      box-shadow: 0 0 30px #ff00ff, 0 0 50px #00ffff;
+    }
+  }
+
+  .todo-search input {
+    width: 75%;
+    padding: 12px;
+    font-size: 1.2rem;
+    color: #00ffff;
+    background: #111;
+    border: 2px solid #00ffff;
+    border-radius: 5px;
+    outline: none;
+    text-align: center;
+    transition: 0.3s;
+  }
+
+  .todo-search input:focus {
+    border-color: #ff00ff;
+    box-shadow: 0 0 15px #ff00ff;
+  }
+
+  .todo-search button {
+    background: linear-gradient(45deg, #00ffff, #ff00ff);
+    color: #111;
+    border: none;
+    padding: 12px 18px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+    box-shadow: 0 0 10px #ff00ff;
+  }
+
+  .todo-search button:hover {
+    background: linear-gradient(45deg, #ff00ff, #00ffff);
+    box-shadow: 0 0 20px #ff00ff, 0 0 30px #00ffff;
+    color: #fff;
+  }
+
+  .todo-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(34, 34, 34, 0.9);
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 5px;
+    box-shadow: 0 0 15px #00ffff;
+    transition: 0.3s;
+  }
+
+  .todo-list-item:hover {
+    box-shadow: 0 0 25px #ff00ff;
+    transform: scale(1.05);
+  }
+
+  .task p {
+    margin-left: 10px;
+    font-size: 1.2rem;
+  }
+
+  input[type="checkbox"] {
+    transform: scale(1.5);
+    accent-color: #00ffff;
+  }
+
+  .btn-container {
+    display: flex;
+    gap: 10px;
+  }
+
+  .edit i, .del i {
+    font-size: 1.5rem;
+    transition: 0.3s;
+  }
+
+  .edit i {
+    color: #00ffff;
+  }
+
+  .edit:hover i {
+    color: #ff0;
+    text-shadow: 0 0 10px #ff0;
+  }
+
+  .del i {
+    color: #ff0033;
+  }
+
+  .del:hover i {
+    color: #ff0000;
+    text-shadow: 0 0 10px #ff0000;
+  }
+
+  .completed-task p {
+    text-decoration: line-through;
+    color: #888;
+  }
+</style>
+
+<div class="todo-container" id="todo-container">
+  <div class="todo-search">
+    <form
+      action=""
+      hx-post="{% url 'create-todo' %}"
+      hx-trigger="submit"
+      hx-target="#todo-container"
+      hx-swap="outerHTML"
+    >
+      {% csrf_token %}
+      <input id="input" placeholder="Enter Todo" name="task" required />
+      <button>Add</button>
+    </form>
+  </div>
+
+  <div class="todo-list" id="todo-list">
+    {% for task in tasks %}
+    <div class="todo-list-item {% if task.completed %}completed-task{% endif %}">
+      <div class="task">
+        <input
+          type="checkbox"
+          hx-trigger="change"
+          hx-target="#todo-container"
+          hx-swap="outerHTML"
+          hx-post="{% url 'task-status' task.id %}"
+          {% if task.completed %} checked {% endif %}
+        />
+        <p>{{ task.title }}</p>
+      </div>
+
+      <div class="btn-container">
+        <div
+          class="edit"
+          hx-get="{% url 'append-to-form' task.id %}"
+          hx-trigger="click"
+          hx-target="#input"
+          hx-swap="outerHTML"
+        >
+          <i class="fa-solid fa-pen-to-square"></i>
+        </div>
+
+        <div
+          class="del"
+          hx-post="{% url 'delete-task' task.id %}"
+          hx-trigger="click"
+          hx-target="#todo-container"
+          hx-swap="outerHTML"
+          hx-confirm="Delete '{{task.title}}'?"
+        >
+          <i class="fa-solid fa-trash-can"></i>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock content %}

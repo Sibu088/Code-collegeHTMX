@@ -1,0 +1,54 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.card {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.btn-primary {
+    width: 100%;
+}
+
+h1 {
+    color: #134692;
+    margin-bottom: 1rem;
+}
+
+.htmx-indicator {
+    opacity: 0;
+    transition: opacity 200ms ease-in;
+}
+
+.htmx-request .htmx-indicator {
+    opacity: 1;
+}
+
+.spinner-border {
+    margin-left: 1rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    display: inline-block;
+}
+
+.list-group {
+    margin-top: 2rem;
+}
+
+.list-group-item {
+    transition: background-color 200ms ease;
+}
+
+.list-group-item:hover {
+    background-color: #e9ecef;
+}
